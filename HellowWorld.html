@@ -36,6 +36,18 @@
       });
       // viewer.scene.debugShowFramesPerSecond = true; // 帧数监听
       // viewer.scene.skyAtmosphere.show = true  // 是否展示大气层
+
+      var yellowLine = viewer.entities.add({
+        name: "Red line on the surface",
+        polyline: {
+          positions: Cesium.Cartesian3.fromDegreesArray([
+            112.82436, 23.071506, 112.82742, 23.067512, 112.828878, 23.064659,
+            112.830799, 23.060947, 112.832166, 24.058329,
+          ]),
+          width: 2,
+          material: Cesium.Color.YELLOW,
+        },
+      });
     </script>
   </body>
 </html>
