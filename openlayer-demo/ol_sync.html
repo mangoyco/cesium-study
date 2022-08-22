@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<script src="./lib/ol/ol.js"></script>
+	<script src="./lib/ol/proj4.js"></script>
+	<link href="./css/ol.css" rel="stylesheet" />
+	<style type="text/css">
+		body,html,div{
+			border:none;padding:0;margin:0;
+			font-size:14px;
+			font-family:"微软雅黑";
+		}
+		#menu{
+			width:100%;
+			height:20px;
+			padding:5px 10px;
+			left:10px;
+		}
+		.container{
+			float:left;
+			width:48%;
+			height:850px;
+			margin:0 5px;
+			margin-left:10px; 
+		}		
+		.map{
+			float:left;
+			width:100%;
+			height:100%;
+			border:1px dashed red;
+		}
+	</style>
+	<script type="text/javascript">
+		window.onload = function () {
+			//定义一个变量，用来存储投影变换后的地图
+			var transformMap;
+			//初始化矢量图层
+			var vector = new ol.layer.Vector({
+				source: new ol.source.Vector({
+					url: '/ol/data/geojson/countries-110m1.json',
+					format:new ol.format.GeoJSON()
+				})
+			});
+
+			var tile = new ol.layer.Tile({
+					source:new ol.source.OSM()
+				})
+ 
+			//初始化地图
+			var map1 = new ol.Map({
+				layers: [
+					tile,
+					vector
+				],
+				//渲染方式
+				render: 'canvas',
+				target: 'map1',
+				view: new ol.View({
+					//EPSG:3857投影
+					projection: ol.proj.get('EPSG:3857'),
+					//分辨率
+					resolutions: [65536, 32768, 16384, 8192, 4096, 2048],
+					center:ol.proj.transform([109, 34], 'EPSG:4326', 'EPSG:3857'),
+					//center:[159, 34],
+					zoom:3
+				})
+			});
+			//显示网格参考
+			var graticule = new ol.Graticule({
+				map: map1
+			})
+			
+			
+			//初始化地图
+			var map2 = new ol.Map({
+				layers: [
+					tile,
+					vector
+				],
+				//渲染方式
+				render: 'canvas',
+				target: 'map2',
+				view: new ol.View({
+					//EPSG:3857投影
+					projection: ol.proj.get('EPSG:3857'),
+					//分辨率
+					resolutions: [65536, 32768, 16384, 8192, 4096, 2048],
+					center:ol.proj.transform([109, 34], 'EPSG:4326', 'EPSG:3857'),
+					//center:[159, 34],
+					zoom:3
+				})
+			});
+			//显示网格参考
+			var graticule = new ol.Graticule({
+				map: map2
+			})
+			
+			
+			map1.on("moveend",function(e){
+				
+				var extent = map1.getView().calculateExtent(map1.getSize());
+				map2.getView().fit(extent,{nearest:true});
+
+			});
+			
+			map2.on("moveend",function(e){
+				
+				var extent = map2.getView().calculateExtent(map2.getSize());
+				map1.getView().fit(extent,{nearest:true});
+
+			});
+
+
+			
+		};
+	</script>
+</head>
+<body>
+	<div id="menu">
+		<label class="title" for="projection">
+			地图投影转换演示：<button id="projection">投影转换</button>
+		</label>
+	</div>
+	<div class="container">
+		<label>投影坐标系(EPSG:3857)</label>
+		<div id="map1" class="map"></div>
+	</div>
+	<div class="container">
+		<label>投影坐标系(ESRI:53009)</label>
+		<div id="map2" class="map"></div>
+	</div>
+</body>
+</html>
