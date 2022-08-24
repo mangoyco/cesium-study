@@ -23,6 +23,8 @@
     <script src="./Cesium/Cesium.js"></script>
     <script>
             var viewer = new Cesium.Viewer("cesium-container", {
+              baseLayerPicker: false,
+              imageryProvider: false,
               // geocoder: false,
               // homeButton: false,
               // sceneModePicker: false,
@@ -35,7 +37,8 @@
               // vrButton: false,
             });
             // viewer.scene.debugShowFramesPerSecond = true; // 帧数监听
-            // viewer.scene.skyAtmosphere.show = true  // 是否展示大气层
+            viewer.scene.skyAtmosphere.show = false  // 是否展示大气层
+            viewer.scene.globe.showGroundAtmosphere = false;
 
             // var yellowLine = viewer.entities.add({
             //   name: "Red line on the surface",
@@ -48,8 +51,67 @@
             //     material: Cesium.Color.YELLOW,
             //   },
             // });
+             viewer.scene.skyBox.show = false;
+             viewer.scene.globe.baseColor = new Cesium.Color(255,0,0,1)
 
-           
+           let provider = {
+        "wmts": "C_WebMapTileServiceImageryProvider",
+        "wms": "WebMapServiceImageryProvider",
+        "single": "SingleTileImageryProvider",
+        "url": "UrlTemplateImageryProvider"
+    }
+
+    function setBaseLayer(param, flag, index) {
+        if(flag){
+            let p = {...param};
+            p.provider.tilingScheme = p.provider.projection !== "WebMercator" ? new Cesium.GeographicTilingScheme() : new Cesium.WebMercatorTilingScheme();
+            let imageryLayer = new Cesium.ImageryLayer(new Cesium[provider[p.type.toLowerCase()]](param.provider), param.layer);
+            imageryLayer.id = param.id;
+            viewer.imageryLayers.add(imageryLayer, index)
+        }else{
+            for(let i = 0; i < viewer.imageryLayers.length; i ++) {
+                if(viewer.imageryLayers._layers[i].id === param.id) {
+                    viewer.imageryLayers.remove(viewer.imageryLayers.get(i) );
+                }
+            }
+        }
+    }
+
+    function setTerrainLayer(param, flag) {
+        if(flag){
+            viewer.terrainProvider = new Cesium.CesiumTerrainProvider({
+                url: param.url
+            });
+        }else{
+            viewer.terrainProvider= new Cesium.EllipsoidTerrainProvider();
+        }
+    }
+
+    Cesium["C_layerManager"] = {
+        setBaseLayer,
+        setTerrainLayer
+    }
+
+    fetch('./贴其他的图/config.json').then(res=>res.json()).then(res=>{
+      console.log(res.mapService)
+      const imageryLayers = res.mapService.imageryLayers;
+      if (imageryLayers && Array.isArray(imageryLayers)) {
+          imageryLayers.forEach((item, i) => {
+              if (item.preloading && i === 0) {
+                  Cesium.C_layerManager.setBaseLayer(item, true);
+              }
+          });
+      }
+      // const dem = window.$config.mapService.dem;
+      // if (dem && Array.isArray(dem)) {
+      //     dem.forEach((item) => {
+      //         if (item.preloading) {
+      //             Cesium.C_layerManager.setTerrainLayer(item, true);
+      //         }
+      //     });
+      // }
+    })
+
 
     </script>
   </body>

@@ -1,0 +1,112 @@
+{
+    "mapService": {
+      
+        "imageryLayers": [
+            {
+                "id": "Global_Vector_Map-JPEG-3857",
+                "type": "WMS",
+                "label": "暗黑地图",
+                "preloading": true,
+                "layer": {},
+                "provider": {
+                    "url": "http://192.168.4.122:8310/tilecache/service/wms",
+                    "layers": "Global_Vector_Map-JPEG-3857",
+                    "format": "image/jpeg",
+                    "style": "default",
+                    "maximumLevel": 19,
+                    "tileMatrixSetID": "EPSG:3857",
+                    "projection": "WebMercator"
+                }
+            },
+            {
+              "id": "Global_Image_JPEG_4326",
+              "type": "WMTS",
+              "label": "基础影像",
+              "preloading": true,
+              "layer": {},
+              "provider": {
+                  "url": "http://192.168.4.120:8310/tilecache/service/wmts",
+                  "layer": "Global_Image_JPEG_4326-JPEG-4326",
+                  "format": "image/jpeg",
+                  "style": "default",
+                  "maximumLevel": 19,
+                  "tileMatrixSetID": "EPSG:4326",
+                  "projection": "WGS84"
+              }
+            },
+            {
+                "type": "url",
+                "label": "基础影像",
+                "preloading": false,
+                "layer": {},
+                "provider": {
+                    "url": "https://iserver.supermap.io/iserver/services/map-china400/wmts100/China/default/GoogleMapsCompatible_China/{z}/{y}/{x}.png",
+                    "projection": "WebMercator"
+                }
+            },
+            {
+                "type": "url",
+                "label": "河北省底图服务",
+                "preloading": true,
+                "layer": {},
+                "provider": {
+                    "url": "http://36.110.12.229:9015/usmaps?tags=x13&tk=7e15aa5a-f449-4257-8932-765d48db9ff9&request=getTile&TileMatrixSet=w&TileMatrix={z}&TileRow={y}&TileCol={x}",
+                    "projection": "WebMercator"
+                }
+            },
+            {
+              "id": "Global_ImageLabel17-PNG-4326",
+              "type": "WMTS",
+              "label": "标注图层",
+              "preloading": true,
+              "layer": {},
+              "provider": {
+                  "url": "http://192.168.4.120:8310/tilecache/service/wmts",
+                  "layer": "Global_ImageLabel-PNG-4326",
+                  "format": "image/png",
+                  "style": "default",
+                  "maximumLevel": 10,
+                  "tileMatrixSetID": "EPSG:4326",
+                  "projection": "WGS84"
+              }
+          },
+          {
+            "type": "WMTS",
+            "label": "河北省生态保护红线疑似生态破坏问题图斑",
+            "preloading": true,
+            "layer": {},
+            "provider": {
+                "url": "http://192.168.4.120:8310/geoserverplus/gwc/service/wmts",
+                "layer": "icenter:河北省生态保护红线疑似生态破坏问题图斑-PNG-4326",
+                "format": "image/png",
+                "style": "default",
+                "maximumLevel": 17,
+                "tileMatrixSetID": "EPSG:3857",
+                "projection": "WebMercator"
+            }
+        },
+            {
+                "type": "WMTS",
+                "label": "黑色底图",
+                "preloading": false,
+                "layer": {},
+                "provider": {
+                    "url": "http://icenter.geovis.online/tilecache/service/wmts",
+                    "layer": "icenter:blackMarbel2016-PNG-4326",
+                    "format": "image/png",
+                    "style": "default",
+                    "maximumLevel": 17,
+                    "tileMatrixSetID": "EPSG:3857",
+                    "projection": "WebMercator"
+                }
+            }
+        ],
+        "dem": [{
+            "type": "dem",
+            "label": "全球90米地形",
+            "preloading": false,
+            "url": "http://192.168.16.16:8310/tilecache/service/terrain/Global_dem_New-RAW-4326"
+        }]
+    },
+    "baseUrl":"http://192.168.4.120:8077" 
+}
