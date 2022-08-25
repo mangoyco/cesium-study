@@ -12,13 +12,14 @@ const source = {
   type:'url',
   url: "http://36.110.12.229:9015/usmaps?tags=x13&tk=7e15aa5a-f449-4257-8932-765d48db9ff9&request=getTile&TileMatrixSet=w&TileMatrix={z}&TileRow={y}&TileCol={x}",
   provider:{
-    projection: "WebMercator",
+    projection: "WebMercator", // 说实话这个不太清楚各个值有啥区别
     url: "http://36.110.12.229:9015/usmaps?tags=x13&tk=7e15aa5a-f449-4257-8932-765d48db9ff9&request=getTile&TileMatrixSet=w&TileMatrix={z}&TileRow={y}&TileCol={x}"
   },
   layer:{}
 };
 
-const WebMercator = new Cesium.WebMercatorTilingScheme(); // 好像是叫墨卡托投影。。。。总之也是瓦片...
+source.provider.tilingScheme = new Cesium.WebMercatorTilingScheme(); // 好像是叫墨卡托投影。。。。总之也是瓦片...
+// ↑ 说实话上边这行测了一下没有好像也一样.....
 const UrlTemplateImageryProvider = new Cesium.UrlTemplateImageryProvider(source.provider)
 let imageryLayer = new Cesium.ImageryLayer(
   UrlTemplateImageryProvider,

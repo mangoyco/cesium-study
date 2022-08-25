@@ -4,34 +4,34 @@ const ImageryProvider = Cesium.ImageryProvider;
 const WebMapTileServiceImageryProvider =
   Cesium.WebMapTileServiceImageryProvider;
 
-// class C_WebMapTileServiceImageryProvider extends WebMapTileServiceImageryProvider {
-//   constructor(options) {
-//     super(options);
-//   }
-//   requestImage(x, y, level, request) {
-//     var result;
-//     var timeDynamicImagery = this._timeDynamicImagery;
-//     var currentInterval;
+class C_WebMapTileServiceImageryProvider extends WebMapTileServiceImageryProvider {
+  constructor(options) {
+    super(options);
+  }
+  // requestImage(x, y, level, request) {
+  //   var result;
+  //   var timeDynamicImagery = this._timeDynamicImagery;
+  //   var currentInterval;
 
-//     // Try and load from cache
-//     if (defined(timeDynamicImagery)) {
-//       currentInterval = timeDynamicImagery.currentInterval;
-//       result = timeDynamicImagery.getFromCache(x, y, level, request);
-//     }
+  //   // Try and load from cache
+  //   if (defined(timeDynamicImagery)) {
+  //     currentInterval = timeDynamicImagery.currentInterval;
+  //     result = timeDynamicImagery.getFromCache(x, y, level, request);
+  //   }
 
-//     // Couldn't load from cache
-//     if (!defined(result)) {
-//       result = requestImage(this, x, y, level, request, currentInterval);
-//     }
+  //   // Couldn't load from cache
+  //   if (!defined(result)) {
+  //     result = requestImage(this, x, y, level, request, currentInterval);
+  //   }
 
-//     // If we are approaching an interval, preload this tile in the next interval
-//     if (defined(result) && defined(timeDynamicImagery)) {
-//       timeDynamicImagery.checkApproachingInterval(x, y, level, request);
-//     }
+  //   // If we are approaching an interval, preload this tile in the next interval
+  //   if (defined(result) && defined(timeDynamicImagery)) {
+  //     timeDynamicImagery.checkApproachingInterval(x, y, level, request);
+  //   }
 
-//     return result;
-//   }
-// }
+  //   return result;
+  // }
+}
 
 function requestImage(imageryProvider, col, row, level, request, interval) {
   var labels = imageryProvider._tileMatrixLabels;
@@ -96,7 +96,7 @@ function requestImage(imageryProvider, col, row, level, request, interval) {
   return ImageryProvider.loadImage(imageryProvider, resource);
 }
 
-// Cesium["C_WebMapTileServiceImageryProvider"] = C_WebMapTileServiceImageryProvider;
+Cesium["C_WebMapTileServiceImageryProvider"] = C_WebMapTileServiceImageryProvider;
 
 let provider = {
   "wmts": "C_WebMapTileServiceImageryProvider",
@@ -106,13 +106,15 @@ let provider = {
 };
 
 function setBaseLayer(param, flag, index) {
-  console.log(JSON.parse(JSON.stringify(param)),flag)
+  console.log(JSON.parse(JSON.stringify(param)),flag, index)
   if (flag) {
     let p = { ...param };
+    console.log(p.provider.projection !== "WebMercator");
     p.provider.tilingScheme =
       p.provider.projection !== "WebMercator"
         ? new Cesium.GeographicTilingScheme()
         : new Cesium.WebMercatorTilingScheme();
+    console.log(param.provider);
     let imageryLayer = new Cesium.ImageryLayer(
       new Cesium[provider[p.type.toLowerCase()]](param.provider),
       param.layer
@@ -150,7 +152,7 @@ fetch("./贴其他的图/config.json")
     const imageryLayers = res.mapService.imageryLayers;
     if (imageryLayers && Array.isArray(imageryLayers)) {
       imageryLayers.forEach((item, i) => {
-        if (item.preloading && i === 3) {
+        if (item.preloading && i === 1) {
           Cesium.C_layerManager.setBaseLayer(item, true);
         }
       });
